@@ -59,4 +59,9 @@ public class IndexController {
         return "Hello Test";
     }
 
+    @RequestMapping("/index")
+    public String indexPage(){
+        return "index";
+    }
+
 }

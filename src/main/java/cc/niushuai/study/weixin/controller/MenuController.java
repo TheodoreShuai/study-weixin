@@ -16,7 +16,6 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.menu.WxMpGetSelfMenuInfoResult;
 import me.chanjar.weixin.mp.bean.menu.WxMpMenu;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,7 +52,7 @@ public class MenuController {
 
             WxMenuButton button4 = new WxMenuButton();
             button4.setType(WxConsts.MenuButtonType.VIEW);
-            button4.setKey("V1001_Fans");
+            button4.setKey("V1001_Links");
             button4.setName("百度一下");
             button4.setUrl("http://www.baidu.com");
 
@@ -66,6 +65,13 @@ public class MenuController {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @RequestMapping("/addDefault")
+    public void addDefaultMenu() throws WxErrorException {
+        String json = "{\"button\":[{\"name\":\"扫码\",\"sub_button\":[{\"key\":\"rselfmenu_0_0\",\"name\":\"扫码带提示\",\"type\":\"scancode_waitmsg\"},{\"key\":\"rselfmenu_0_1\",\"name\":\"扫码推事件\",\"type\":\"scancode_push\"}]},{\"name\":\"发图\",\"sub_button\":[{\"key\":\"rselfmenu_1_0\",\"name\":\"系统拍照发图\",\"type\":\"pic_sysphoto\"},{\"key\":\"rselfmenu_1_1\",\"name\":\"拍照或者相册发图\",\"type\":\"pic_photo_or_album\"},{\"key\":\"rselfmenu_1_2\",\"name\":\"微信相册发图\",\"type\":\"pic_weixin\"}]},{\"key\":\"rselfmenu_2_0\",\"name\":\"发送位置\",\"type\":\"location_select\"}]}";
+        wxMpService.getMenuService().menuCreate(json);
+
     }
 
 
@@ -94,6 +100,7 @@ public class MenuController {
 
     @RequestMapping("/addSubMenu")
     public void addSubMenu() throws WxErrorException {
+        j=0;
         WxMpMenu wxMpMenu = menuGet();
         WxMpMenu.WxMpConditionalMenu menu = wxMpMenu.getMenu();
         List<WxMenuButton> buttons = menu.getButtons();
@@ -105,14 +112,15 @@ public class MenuController {
             WxMenuButton btn = buttons.get(i);
             String name = btn.getName();
             List<WxMenuButton> buttonList = null;
-            if(name.equals("业务查询")){
-                buttonList = getButtonList(new String[]{"流量查询", "话费查询", "套餐余量", "已开业务"});
-            }else if(name.equals("业务办理")){
-                buttonList = getButtonList(new String[]{"话费充值","宽带新装"});
-            }else if(name.equals("粉丝福利")){
-                buttonList = getButtonList(new String[]{"新人再领500M","疯狂星期五","查网龄再送流量"});
+            if (name.equals("业务查询")) {
+                buttonList = getButtonList(new String[]{"扫码推事件", "扫码推事件_带信息", "弹出系统拍照", "弹出选择器"});
+            } else if (name.equals("业务办理")) {
+                buttonList = getButtonList(new String[]{"微信相册发图器", "地理位置选择器"});
+            } else if (name.equals("粉丝福利")) {
+                buttonList = getButtonList(new String[]{"新人再领500M", "疯狂星期五", "查网龄再送流量"});
             }
-            btn.getSubButtons().addAll(buttonList);
+            if(null != buttonList)
+                btn.getSubButtons().addAll(buttonList);
             menuButtons.add(btn);
         }
 
@@ -120,18 +128,44 @@ public class MenuController {
 
     }
 
+
+    int j = 0;
     private List<WxMenuButton> getButtonList(String[] btns) {
         List<WxMenuButton> result = new ArrayList<>();
-        for (int i = 0; i < btns.length; i++) {
+        for (int i = 0; i < btns.length; i++,j++) {
             WxMenuButton btn = new WxMenuButton();
-            btn.setKey("V1001_"+i);
+            btn.setKey("V10012_" + i);
             btn.setName(btns[i]);
-            btn.setType(WxConsts.MenuButtonType.CLICK);
+            btn.setType(getType(i+j));
             result.add(btn);
         }
         return result;
     }
 
+    private String getType(int i) {
+
+        switch (i) {
+            case 0:
+                return WxConsts.MenuButtonType.SCANCODE_PUSH;
+            case 1:
+                return WxConsts.MenuButtonType.SCANCODE_WAITMSG;
+            case 2:
+                return WxConsts.MenuButtonType.PIC_SYSPHOTO;
+            case 3:
+                return WxConsts.MenuButtonType.PIC_PHOTO_OR_ALBUM;
+            case 4:
+                return WxConsts.MenuButtonType.PIC_WEIXIN;
+            case 5:
+                return WxConsts.MenuButtonType.LOCATION_SELECT;
+            //case 6:
+            //    return WxConsts.MenuButtonType.MEDIA_ID;
+            //case 7:
+            //    return WxConsts.MenuButtonType.VIEW_LIMITED;
+        }
+
+        return WxConsts.MenuButtonType.CLICK;
+
+    }
 
 
     @RequestMapping("/addView")
@@ -141,21 +175,19 @@ public class MenuController {
         List<WxMenuButton> buttons = menu.getButtons();
 
 
-
-
         return "";
     }
 
 
-    @RequestMapping("/delete/{id}")
-    public String delete(@PathVariable String id) throws WxErrorException {
+    @RequestMapping("/delete")
+    public String delete() throws WxErrorException {
         wxMpService.getMenuService().menuDelete();
         return "|";
     }
 
 
     @RequestMapping("/addSubView")
-    public String addSubView(){
+    public String addSubView() {
 
 
         return null;
