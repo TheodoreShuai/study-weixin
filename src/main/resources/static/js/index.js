@@ -33,6 +33,9 @@ $("#addSub").click(function(){
 $("#addDefault").click(function(){
     sendRequest("GET","menu/addDefault",null);
 });
+$("#subscribeBtn").click(function(){
+    sendRequest("POST","event/subscribe",$("#subscribeForm").serialize());
+});
 
 
 

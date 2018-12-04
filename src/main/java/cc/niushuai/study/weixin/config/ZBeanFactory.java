@@ -1,5 +1,6 @@
 package cc.niushuai.study.weixin.config;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;

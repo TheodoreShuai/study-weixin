@@ -6,9 +6,7 @@
  */
 package cc.niushuai.study.weixin.config;
 
-import me.chanjar.weixin.mp.api.WxMpConfigStorage;
-import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
-import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.api.*;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +19,7 @@ public class WxMpServiceConfig {
     private Constant constant;
 
     @Bean
-    public WxMpService wxMpService(){
+    public WxMpService wxMpService() {
 
         WxMpService wxMpService = new WxMpServiceImpl();
         WxMpConfigStorage provider = new WxMpInMemoryConfigStorage();
@@ -31,4 +29,16 @@ public class WxMpServiceConfig {
 
         return wxMpService;
     }
+
+    @Bean
+    public WxMpMenuService menuService() {
+        return wxMpService().getMenuService();
+    }
+
+
+    @Bean(value = "subscribeMsgService")
+    public WxMpSubscribeMsgService subscribeMsgService() {
+        return wxMpService().getSubscribeMsgService();
+    }
+
 }
