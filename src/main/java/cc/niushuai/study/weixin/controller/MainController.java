@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/main")
 public class MainController {
 
+
     @Autowired
     private WxMpService wxMpService;
+
 
     @RequestMapping("/at")
     public String getAccessToken() {

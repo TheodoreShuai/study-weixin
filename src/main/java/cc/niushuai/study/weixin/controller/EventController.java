@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 @Controller("/event")
 public class EventController {
 
+
     @Autowired
     private WxMpSubscribeMsgService subscribeMsgService;
 
@@ -33,7 +34,6 @@ public class EventController {
         try {
             w = response.getWriter();
 
-
             String event = msg.getEvent();
             if (event.equalsIgnoreCase(WxConsts.EventType.SUBSCRIBE)) {
 
@@ -42,21 +42,31 @@ public class EventController {
                 respMsg.setTitle("欢迎订阅");
                 respMsg.setContentValue("这是<a href='http://www.baidu.com'>百度</a>页面");
 
-
-//                System.out.println(respMsg);
+                //System.out.println(respMsg);
 
                 boolean b = subscribeMsgService.sendSubscribeMessage(respMsg);
                 System.out.println(b);
-
 
             } else if (event.equalsIgnoreCase(WxConsts.EventType.UNSUBSCRIBE)) {
 
             }
 
-            w.write("ok");
-        } catch (IOException e) {
+            w.write("success");
+       } catch (IOException e) {
             //e.printStackTrace();
         } catch (WxErrorException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void viewEvent(HttpServletResponse response, WxMpXmlMessage msg) {
+
+
+        System.out.println(msg);
+
+        try {
+            response.getWriter().write("success");
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

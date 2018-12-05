@@ -36,9 +36,14 @@ public class WxMpServiceConfig {
     }
 
 
-    @Bean(value = "subscribeMsgService")
+    @Bean
     public WxMpSubscribeMsgService subscribeMsgService() {
         return wxMpService().getSubscribeMsgService();
+    }
+
+    @Bean
+    public WxMpKefuService wxkefuService(){
+        return wxMpService().getKefuService();
     }
 
 }

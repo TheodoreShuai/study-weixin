@@ -36,6 +36,9 @@ public class IndexController {
     @Autowired
     private Constant constant;
 
+    @Autowired
+    private EventController eventController;
+
     @GetMapping("/confirmServerInfo")
     public void testWx(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String signature = request.getParameter("signature");
@@ -65,7 +68,7 @@ public class IndexController {
 
 
     @PostMapping("/confirmServerInfo")
-    public void postMapping(HttpServletRequest request, HttpServletResponse response) {
+    public String postMapping(HttpServletRequest request, HttpServletResponse response) {
 
         try {
 
@@ -84,7 +87,9 @@ public class IndexController {
                 link(response, msg);
             else if ("event".equalsIgnoreCase(msg.getMsgType())) {
                 if (WxConsts.EventType.SUBSCRIBE.equalsIgnoreCase(msg.getEvent()) || WxConsts.EventType.UNSUBSCRIBE.equalsIgnoreCase(msg.getEvent()))
-                    new EventController().subscribeEvent(response, msg);
+                    eventController.subscribeEvent(response, msg);
+                else if(msg.getEvent().equalsIgnoreCase(WxConsts.EventType.VIEW))
+                    eventController.viewEvent(response,msg);
 
             }
 
@@ -93,6 +98,7 @@ public class IndexController {
             e.printStackTrace();
         }
 
+        return "success";
     }
 
     private void link(HttpServletResponse response, WxMpXmlMessage msg) {
