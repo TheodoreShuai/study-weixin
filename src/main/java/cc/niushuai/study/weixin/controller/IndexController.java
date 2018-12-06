@@ -68,7 +68,7 @@ public class IndexController {
 
 
     @PostMapping("/confirmServerInfo")
-    public String postMapping(HttpServletRequest request, HttpServletResponse response) {
+    public void postMapping(HttpServletRequest request, HttpServletResponse response) {
 
         try {
 
@@ -76,8 +76,7 @@ public class IndexController {
             response.setCharacterEncoding("UTF-8");
 
             WxMpXmlMessage msg = WxMpXmlMessage.fromXml(request.getInputStream());
-            System.out.println(msg);
-
+            //System.out.println(msg);
 
             if (WxConsts.XmlMsgType.TEXT.equalsIgnoreCase(msg.getMsgType()))
                 text(response, msg);
@@ -90,7 +89,6 @@ public class IndexController {
                     eventController.subscribeEvent(response, msg);
                 else if(msg.getEvent().equalsIgnoreCase(WxConsts.EventType.VIEW))
                     eventController.viewEvent(response,msg);
-
             }
 
         } catch (IOException e) {
@@ -98,7 +96,6 @@ public class IndexController {
             e.printStackTrace();
         }
 
-        return "success";
     }
 
     private void link(HttpServletResponse response, WxMpXmlMessage msg) {
@@ -127,6 +124,8 @@ public class IndexController {
     }
 
     private void text(HttpServletResponse response, WxMpXmlMessage msg) throws IOException {
+        PrintWriter w = response.getWriter();
+
         TextBuilder text = WxMpXmlOutMessage.TEXT();
         text.toUser(msg.getFromUser());
         text.fromUser(msg.getToUser());
@@ -134,18 +133,17 @@ public class IndexController {
         text.content("本次发送的内容是：" + content);
         WxMpXmlOutMessage build = text.build();
 
-        PrintWriter writer = response.getWriter();
 
         if (content.equalsIgnoreCase("链接")) {
+            System.out.println("连接");
 
 
-            return;
 
         }
 
-
-        System.out.println(build.toXml());
-        writer.print(build.toXml());
+        String xml = build.toXml();
+        System.out.println(xml);
+        w.print(xml);
 
     }
 
@@ -159,7 +157,7 @@ public class IndexController {
 
     @RequestMapping("/index")
     public String indexPage() {
-        return "index";
+        return "index2";
     }
 
 }
