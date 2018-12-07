@@ -46,4 +46,9 @@ public class WxMpServiceConfig {
         return wxMpService().getKefuService();
     }
 
+    @Bean
+    public WxMpMaterialService wxMpMaterialService(){
+        return wxMpService().getMaterialService();
+    }
+
 }
