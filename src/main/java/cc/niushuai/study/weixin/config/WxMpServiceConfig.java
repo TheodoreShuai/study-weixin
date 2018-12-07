@@ -42,13 +42,33 @@ public class WxMpServiceConfig {
     }
 
     @Bean
-    public WxMpKefuService wxkefuService(){
+    public WxMpKefuService wxkefuService() {
         return wxMpService().getKefuService();
     }
 
     @Bean
-    public WxMpMaterialService wxMpMaterialService(){
+    public WxMpMaterialService wxMpMaterialService() {
         return wxMpService().getMaterialService();
+    }
+
+    @Bean
+    public WxMpUserService wxMpUserService() {
+        return wxMpService().getUserService();
+    }
+
+    @Bean
+    public WxMpUserTagService wxMpUserTagService() {
+        return wxMpService().getUserTagService();
+    }
+
+    @Bean
+    public WxMpUserBlacklistService wxMpUserBlacklistService() {
+        return wxMpService().getBlackListService();
+    }
+
+    @Bean
+    public WxMpQrcodeService wxMpQrcodeService(){
+        return wxMpService().getQrcodeService();
     }
 
 }
