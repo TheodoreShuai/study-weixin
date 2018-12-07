@@ -76,7 +76,7 @@ public class IndexController {
             response.setCharacterEncoding("UTF-8");
 
             WxMpXmlMessage msg = WxMpXmlMessage.fromXml(request.getInputStream());
-            //System.out.println(msg);
+            System.out.println(msg);
 
             if (WxConsts.XmlMsgType.TEXT.equalsIgnoreCase(msg.getMsgType()))
                 text(response, msg);
